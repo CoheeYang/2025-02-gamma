@@ -5,6 +5,7 @@ pragma solidity ^0.8.4;
 // @title Order
 // @dev Struct for orders
 library Order {
+  //@audit Q3: WTF IS THIS? using Order for Props;
   using Order for Props;
 
   enum OrderType {

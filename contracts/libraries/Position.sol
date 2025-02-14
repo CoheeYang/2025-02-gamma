@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: BUSL-1.1
-
-pragma solidity ^0.8.4; //@audit Q: any compile issue?
+//@audit Q2: License identifier is different from other files,BUSL-1.1, for what?
+pragma solidity ^0.8.4; //@audit Q1: any compiler issue with ^0.8.4?
 
 // @title Position
 // @dev Stuct for positions

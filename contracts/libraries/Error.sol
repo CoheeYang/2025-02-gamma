@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.4;
+//@audit Q1: any compiler issue with ^0.8.4?
 
 library Error {
   error ZeroValue();

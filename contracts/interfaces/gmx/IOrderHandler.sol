@@ -3,7 +3,7 @@
 pragma solidity ^0.8.4;
 
 import "../../libraries/StructData.sol";
-//@audit Q: What is the purpose of this interface? AND importing for what?
+//@audit Q4: What is the purpose of GMX interface? AND importing for what?
 interface IOrderHandler {
   function oracle() external view returns (address);
 }
