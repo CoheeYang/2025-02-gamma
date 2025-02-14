@@ -536,6 +536,7 @@ contract GmxProxy is
   * @dev This function can only be called by the owner of the contract.
   * @return The balance of ETH withdrawn from the contract.
   */
+  //@audit M:Low-- do not use transfer to transfer ETH,it limits the gas to 2300 and can cause unnecessary reverts
   function withdrawEth() external onlyOwner returns (uint256) {
     uint256 balance = address(this).balance;
     payable(msg.sender).transfer(balance);

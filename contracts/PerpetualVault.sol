@@ -461,6 +461,7 @@ contract PerpetualVault is IPerpetualVault, Initializable, Ownable2StepUpgradeab
   * @param orderResultData Data from the order execution.
   */
   function afterOrderExecution(
+    
     bytes32 requestKey,
     bytes32 positionKey,
     IGmxProxy.OrderResultData memory orderResultData,
@@ -640,6 +641,7 @@ contract PerpetualVault is IPerpetualVault, Initializable, Ownable2StepUpgradeab
    *  get all deposit ids of a user
    * @param user address of a user
    */
+  //@audit M:Medium-uint8 is used here,which triggers the potention overflow
   function getUserDeposits(address user) external view returns (uint256[] memory depositIds) {
     uint256 length = EnumerableSet.length(userDeposits[user]);
     depositIds = new uint256[](length);
@@ -1125,7 +1127,10 @@ contract PerpetualVault is IPerpetualVault, Initializable, Ownable2StepUpgradeab
    * 
    * @param withdrawn amount of token withdrawn from the position
    * @param positionClosed true when position is closed completely by withdrawing all funds, or false
+   *  
    */
+  //@audit Q:Slither shows reentrancy here 
+  //        _handleReturn被afterOrderExecution
   function _handleReturn(uint256 withdrawn, bool positionClosed, bool refundFee) internal {
     (uint256 depositId) = flowData;
     uint256 shares = depositInfo[depositId].shares;
@@ -1159,6 +1164,7 @@ contract PerpetualVault is IPerpetualVault, Initializable, Ownable2StepUpgradeab
    * @dev Collect fee from the withdraw amount and transfer tokens to the user.
    *  Collect fee only when the user got the profit.
    */
+  //@audit M: High-- Some ERC Token does not revert,and just return false,this will make a huge mistake
   function _transferToken(uint256 depositId, uint256 amount) internal {
     uint256 fee;
     if (amount > depositInfo[depositId].amount) {
@@ -1167,7 +1173,7 @@ contract PerpetualVault is IPerpetualVault, Initializable, Ownable2StepUpgradeab
         collateralToken.safeTransfer(treasury, fee);
       }
     }
-    
+    // if the ERC20 does not revert, it would never catch the next line
     try collateralToken.transfer(depositInfo[depositId].recipient, amount - fee) {}
     catch  {
       collateralToken.transfer(treasury, amount - fee);

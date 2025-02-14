@@ -787,7 +787,7 @@ contract FuzzSetup is FuzzActors {
             dataStore,
             eventEmitter,
             IVaultV1(address(mockVaultV1)),
-            address(0)      // #error-prone
+            address(0) // #error-prone
         );
         _roleChangingCall(DEPLOYER, address(feeHandler), Role.CONTROLLER);
 
