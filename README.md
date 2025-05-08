@@ -1,6 +1,5 @@
 # Gamma Strategies
 
-
 ### Prize Pool
 
 - Total Pool - $50,000 
@@ -20,7 +19,7 @@ The Perpetual Vault Protocol is a decentralized finance (DeFi) system that enabl
 
 Users deposit USDC into the contract, and withdraw USDC from the contract.  The USDC is used to open long/short positions on GMX perps.  Each vaults represents exactly one perps market at a specified leverage.  For example, we'll have a 1x ETH vault, 2x ETH vault, and 3x ETH vault.  The leverage of each vault will stay consistent from start to finish.  All short positions and long positions greater than 1x leverage involve opening a position on GMX perpetuals.  If the position is 1x long, then we open a spot position by swapping thru any combination of GMX spot or Paraswap.
 
-We implemented a Keeper system that executes actions via an asynchronous series of actions.  We use enumerable sets to map users to their deposits.  Each deposit can only be withdrawn in whole.  
+We implemented a **Keeper system** that executes actions via an asynchronous series of actions.  We use enumerable sets to map users to their deposits.  Each deposit can only be withdrawn in whole.  
 
 The strategy of signal changes (i.e. going from long to short or from short to long) is determined offchain and executed by the keeper.
 
@@ -85,7 +84,7 @@ Detail which roles are included within your protocol, for example 'owner', 'borr
  - Update GMX contract addresses
  - Set minimum ETH requirements
  - Withdraw ETH from the contract
- 
+
 - Controls KeeperProxy configuration:
  - Set price feed addresses and parameters
  - Set threshold values
@@ -111,6 +110,7 @@ Detail which roles are included within your protocol, for example 'owner', 'borr
 - Must provide sufficient execution fees for operations
 
 ### 4. Treasury
+
 **Powers:**
 - Receives governance fees from profitable withdrawals
 - Collects claimed rebates and other protocol fees
@@ -144,19 +144,23 @@ Detail which roles are included within your protocol, for example 'owner', 'borr
 ## Risk Mitigation Features
 
 ### 1. Two-Step Ownership Transfer
+
 - Uses OpenZeppelin's Ownable2StepUpgradeable for safer ownership transitions
 
 ### 2. Price Validation
+
 - Implements checks against Chainlink oracle prices
 - Includes grace periods and sequencer checks for L2
 - Configurable thresholds for price deviations
 
 ### 3. Security Timeouts
+
 - Mandatory lockup period for deposits
 - Grace periods for oracle updates
 - Execution time windows for orders
 
 ### 4. Reentrancy Protection
+
 - Uses ReentrancyGuard for critical functions
 - Implements GMX lock mechanism for position management
 
@@ -170,23 +174,7 @@ Detail which roles are included within your protocol, for example 'owner', 'borr
 Example:
 
 ```js
-contract/
-├── PerpetualVault.sol
-├── GmxProxy.sol
-├── KeeperProxy.sol
-├── VaultReader.sol
-├── interfaces
-│   ├── IGmxProxy.sol
-│   ├── IPerpetualVault.sol
-│   └── IVaultReader.sol
-└── libraries
-    ├── gmx/
-        └──MarketUtils.sol
-    ├── Errors.sol
-    ├── Order.sol
-    ├── ParaSwapUtils.sol
-    ├── Position.sol
-    └── StructData.sol
+ 
 ```
 
 ## Compatibilities
@@ -238,7 +226,6 @@ Second, run the test files.
 
 
 [//]: # (getting-started-close)
-
 [//]: # (known-issues-open)
 
 ## Known Issues

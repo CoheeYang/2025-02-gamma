@@ -39,7 +39,7 @@ contract KeeperProxy is Initializable, Ownable2StepUpgradeable, ReentrancyGuardU
     _;
   }
 
-  /**
+  /* @audit Q: they can change the keeper by owner, but how did they change the owner?  
    * @notice Initializes the contract.
    * @dev Sets the initial threshold value and initializes inherited contracts.
    */
@@ -47,6 +47,8 @@ contract KeeperProxy is Initializable, Ownable2StepUpgradeable, ReentrancyGuardU
     __Ownable2Step_init();
     sequencerUptimeFeed = AggregatorV2V3Interface(0xFdB631F5EE196F0ed6FAa767959853A9F217697D);
   }
+
+  
 
   /**
    * @notice Executes a run action on the specified PerpetualVault.
@@ -146,7 +148,7 @@ contract KeeperProxy is Initializable, Ownable2StepUpgradeable, ReentrancyGuardU
     keepers[_keeper] = isSet;
   }
 
-  /**
+  /*
    * @notice Validates the market prices against the Chainlink data feed.
    * @dev Internal function to check the prices of the market tokens.
    * @param perpVault The address of the PerpetualVault.
@@ -164,7 +166,7 @@ contract KeeperProxy is Initializable, Ownable2StepUpgradeable, ReentrancyGuardU
     bool isSequencerUp = answer == 0;
     require(isSequencerUp, "sequencer is down");
     // Make sure the grace period has passed after the sequencer is back up.
-    uint256 timeSinceUp = block.timestamp - startedAt;
+    uint256 timeSinceUp = block.timestamp - startedAt;//@audit Q: can minner do something here?
     require(timeSinceUp > GRACE_PERIOD_TIME, "Grace period is not over");
 
     address market = IPerpetualVault(perpVault).market();
@@ -179,7 +181,7 @@ contract KeeperProxy is Initializable, Ownable2StepUpgradeable, ReentrancyGuardU
     _check(marketData.shortToken, prices.shortTokenPrice.max);
   }
 
-  /**
+  /* @audit Q:Chainlink shit bug solved?
    * @notice Checks the price difference between the given price and the Chainlink price.
    * @dev Internal function to ensure the price difference is within the threshold.
    * @param token The address of the token.
@@ -197,7 +199,7 @@ contract KeeperProxy is Initializable, Ownable2StepUpgradeable, ReentrancyGuardU
     );
   }
 
-  /**
+  /**✅
    * @notice Calculates the absolute difference between two numbers.
    * @dev Internal pure function to calculate the absolute difference.
    * @param a The first number.
